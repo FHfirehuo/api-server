@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"apiserver/config"
+	"apiserver/model"
 	"apiserver/router"
 
 	"github.com/gin-gonic/gin"
@@ -27,6 +28,9 @@ func main() {
 	if err := config.Init(*cfg); err != nil {
 		panic(err)
 	}
+
+	//init DB
+	model.DB.Init()
 
 	// Set gin mode.//gin 有 3 种运行模式：debug、release 和 test，其中 debug 模式会打印很多 debug 信息。
 	gin.SetMode(viper.GetString("runmode"))
