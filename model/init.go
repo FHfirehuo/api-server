@@ -1,6 +1,7 @@
 package model
 
 import (
+	"apiserver/pkg/logger"
 	"fmt"
 	"github.com/spf13/viper"
 
@@ -29,7 +30,7 @@ func open(username, password, addr, name string) *gorm.DB {
 
 	db, err := gorm.Open(mysql.Open(config), &gorm.Config{})
 	if err != nil {
-		panic("failed to connect database")
+		logger.Exception("failed to connect database", err)
 	}
 
 	return db
