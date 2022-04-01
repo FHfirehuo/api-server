@@ -16,3 +16,8 @@ docker:
   addr: 127.0.0.1:3306
   username: root
   password: 11111111
+
+logger:
+  file:
+    path: /opt/logs/apiserver/
+    name: log.log

@@ -1,10 +1,12 @@
 package config
 
 import (
-	"github.com/fsnotify/fsnotify"
 	"log"
 	"strings"
 
+	"apiserver/pkg/logger"
+
+	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 )
 
@@ -52,5 +54,6 @@ func (c *Config) watchConfig() {
 	viper.WatchConfig()
 	viper.OnConfigChange(func(e fsnotify.Event) {
 		log.Printf("Config file changed: %s", e.Name)
+		logger.Info("Config file changed: %s", e.Name)
 	})
 }

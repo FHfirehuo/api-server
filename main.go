@@ -2,17 +2,18 @@ package main
 
 import (
 	"errors"
-	"github.com/spf13/viper"
 	"log"
 	"net/http"
 	"time"
 
 	"apiserver/config"
 	"apiserver/model"
+	"apiserver/pkg/logger"
 	"apiserver/router"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -26,8 +27,11 @@ func main() {
 	//init config
 	//在 main 函数中增加了 config.Init(*cfg) 调用，用来初始化配置，cfg 变量值从命令行 flag 传入，可以传值，比如 ./apiserver -c config.yaml，也可以为空，如果为空会默认读取 conf/config.yaml
 	if err := config.Init(*cfg); err != nil {
-		panic(err)
+		errors.New(err.Error())
 	}
+
+	//init logger config
+	//logger.Init()
 
 	//init DB
 	model.DB.Init()
@@ -50,15 +54,15 @@ func main() {
 		middlewares...,
 	)
 
-	log.Printf("Start to listening the incoming requests on http address: %s", viper.GetString("addr"))
-	log.Printf(http.ListenAndServe(viper.GetString("addr"), g).Error())
+	logger.Info("Start to listening the incoming requests on http address: %s", viper.GetString("addr"))
+	logger.Error(http.ListenAndServe(viper.GetString("addr"), g).Error())
 
 	go func() {
 		if err := pingServer(); err != nil {
-			log.Fatal("The router has no response, or it might took too long to start up.", err)
+			logger.Exception("The router has no response, or it might took too long to start up.", err)
 
 		}
-		log.Print("The router has been deployed successfully.")
+		logger.Info("The router has been deployed successfully.")
 	}()
 }
 
